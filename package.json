@@ -1,0 +1,23 @@
+{
+  "license": "ISC",
+  "name": "template",
+  "description": "frontend template",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tatsuyahirose/template.git"
+  },
+  "author": "",
+  "scripts": {
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "webpack": "^3.10.0"
+  },
+  "main": "webpack.config.js",
+  "dependencies": {},
+  "bugs": {
+    "url": "https://github.com/tatsuyahirose/template/issues"
+  },
+  "homepage": "https://github.com/tatsuyahirose/template#readme"
+}
