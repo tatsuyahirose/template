@@ -2,9 +2,25 @@ require('babel-polyfill');
 const path = require('path');
 const webpack = require('webpack');
 
-// ここ追記
-const DEBUG = !process.argv.includes('--release');
-console.log(DEBUG); // ここは記事用に書いてるだけなので後で消す
+// process.argvにreleaseが含まれていなかったら(npm startで起動していたら)ローカル開発時
+const DEBUG = !process.argv.includes('release');
+
+// webpackのpluginを変数宣言して条件分岐に備える
+const plugins = [
+  new webpack.optimize.OccurrenceOrderPlugin()
+];
+if(!DEBUG){
+  plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        screw_ie8: true,
+        warnings: false
+      },
+      sourceMap: true // // minify時でもソースマップを利用する
+    }),
+    new webpack.optimize.AggressiveMergingPlugin()
+  );
+}
 
 module.exports = {
   // エントリーポイントの指定
@@ -16,6 +32,16 @@ module.exports = {
     // 出力ファイル名
     filename: 'bundle.js'
   },
+  // ローカル開発用環境を立ち上げる
+  // ブラウザで http://localhost:8081/ でアクセスできるようになる
+  devServer: {
+    contentBase: './',
+    port: 8081,
+    inline: true
+  },
+  plugins: plugins,
+  // ソースマップを有効にする
+  devtool: DEBUG ? 'source-map' : false, // debugの時はソースマップなし
   module: {
     loaders: [
       {
@@ -24,23 +50,5 @@ module.exports = {
         loader: 'babel-loader'
       }
     ]
-  },
-
-  // ソースマップを有効にする
-  devtool: DEBUG ? 'source-map' : false, // debugの時はソースマップなし
-  // plugins: [
-  //   // JSファイルのminifyを実行する
-  //   new webpack.optimize.UglifyJsPlugin({
-  //     // minify時でもソースマップを利用する
-  //     sourceMap: true
-  //   })
-  // ],
-
-  // ローカル開発用環境を立ち上げる
-  // ブラウザで http://localhost:8081/ でアクセスできるようになる
-  devServer: {
-    contentBase: './',
-    port: 8081,
-    inline: true
   }
 };
