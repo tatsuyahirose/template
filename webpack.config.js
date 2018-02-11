@@ -4,7 +4,6 @@ const webpack = require('webpack');
 
 // process.argvにreleaseが含まれていなかったら(npm startで起動していたら)ローカル開発時
 const DEBUG = !process.argv.includes('release');
-
 // webpackのpluginを変数宣言して条件分岐に備える
 const plugins = [
   new webpack.optimize.OccurrenceOrderPlugin()
@@ -24,7 +23,8 @@ if(!DEBUG){
 
 module.exports = {
   // エントリーポイントの指定
-  entry: path.join(__dirname, 'src/app.js'),
+
+  entry: path.join(__dirname, 'src/TicTacToe.js'),
   // ファイルの出力設定
   output: {
     // 出力先のフォルダー名
@@ -43,11 +43,18 @@ module.exports = {
   // ソースマップを有効にする
   devtool: DEBUG ? 'source-map' : false, // debugの時はソースマップなし
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.css$/,
+        use: [
+          { loader: "style-loader" },
+          { loader: "css-loader" }
+        ]
       }
     ]
   }
