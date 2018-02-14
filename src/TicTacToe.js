@@ -89,12 +89,18 @@ class Game extends React.Component {
     });
   }
   cpuPlay() {
+    // ランダムで入力されていく
     let history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    console.log( "cpuPlay" );
-    console.log( squares );
-    this.handleClick(1); // この引数をランダムで選択するようにする
+    let nullArray = [];
+    for (var i = 0; i < squares.length; i++) {
+      if (squares[i] === null) {
+        nullArray.push(i);
+      }
+    }
+    const nextCPUnum = nullArray[Math.floor(Math.random() * nullArray.length)];
+    this.handleClick(nextCPUnum); // この引数をランダムで選択するようにする
   }
   componentDidUpdate() {
     if (!this.state.xIsNext) {
